@@ -34,7 +34,7 @@ def query_result_to_support_response(
 # Without supporter_user_id:
 # ----------------------------
 # SELECT
-#   rank() OVER (
+#   dense_rank() OVER (
 #     ORDER BY
 #       aggregate_user_tips.amount DESC
 #   ) AS rank,
@@ -55,7 +55,7 @@ def query_result_to_support_response(
 # ----------------------------
 # WITH rankings AS (
 #   SELECT
-#     rank() OVER (
+#     dense_rank() OVER (
 #       ORDER BY
 #         aggregate_user_tips.amount DESC
 #     ) AS rank,
@@ -87,7 +87,7 @@ def get_support_received_by_user(args) -> List[SupportResponse]:
     db = get_db_read_replica()
     with db.scoped_session() as session:
         query = session.query(
-            func.rank().over(order_by=AggregateUserTip.amount.desc()).label("rank"),
+            func.dense_rank().over(order_by=AggregateUserTip.amount.desc()).label("rank"),
             AggregateUserTip,
         ).filter(AggregateUserTip.receiver_user_id == receiver_user_id)
 
@@ -127,7 +127,7 @@ def get_support_received_by_user(args) -> List[SupportResponse]:
 # FROM
 #   (
 #     SELECT
-#       rank() OVER (
+#       dense_rank() OVER (
 #         PARTITION BY joined_aggregate_tips.receiver_user_id
 #         ORDER BY joined_aggregate_tips.amount DESC
 #       ) AS rank,
@@ -160,7 +160,7 @@ def get_support_received_by_user(args) -> List[SupportResponse]:
 # FROM
 #   (
 #     SELECT
-#       rank() OVER (
+#       dense_rank() OVER (
 #         PARTITION BY joined_aggregate_tips.receiver_user_id
 #         ORDER BY joined_aggregate_tips.amount DESC
 #       ) AS rank,
@@ -192,7 +192,7 @@ def get_support_sent_by_user(args) -> List[SupportResponse]:
         AggregateUserTipB = aliased(AggregateUserTip, name="joined_aggregate_tips")
         query = (
             session.query(
-                func.rank()
+                func.dense_rank()
                 .over(
                     partition_by=AggregateUserTipB.receiver_user_id,
                     order_by=AggregateUserTipB.amount.desc(),

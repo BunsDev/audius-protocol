@@ -112,14 +112,14 @@ DO
 
 
 GET_AGGREGATE_USER_TIPS_RANKS_QUERY = """
-SELECT 
+SELECT
     rank
     , sender_user_id
     , receiver_user_id
     , amount
 FROM (
     SELECT
-        RANK() OVER (PARTITION BY receiver_user_id ORDER BY amount DESC) AS rank
+        DENSE_RANK() OVER (PARTITION BY receiver_user_id ORDER BY amount DESC) AS rank
         , sender_user_id
         , receiver_user_id
         , amount
