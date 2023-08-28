@@ -206,6 +206,9 @@ export class TransactionHandler {
       'REED about to sign with feePayer:',
       feePayerAccount.publicKey.toString()
     )
+    console.log('REED tx:', tx)
+    console.log('REED tx.instructions:', tx.instructions)
+    console.log('REED tx.signatures', tx.signatures)
     tx.sign(feePayerAccount)
     console.log('REED successfully signed')
 
