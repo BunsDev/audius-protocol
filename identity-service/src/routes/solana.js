@@ -49,6 +49,7 @@ solanaRouter.post(
       )
     }
 
+    console.log('REED req.body', JSON.stringify(req.body))
     // Unpack instructions
     let {
       instructions = [],

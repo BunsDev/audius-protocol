@@ -81,6 +81,7 @@ export class TransactionHandler {
     signatures = null,
     retry = true
   }: HandleTransactionParams) {
+    console.log('REED handleTransaction')
     let result: {
       res: string | null
       errorCode: string | number | null
@@ -165,6 +166,7 @@ export class TransactionHandler {
     signatures: Array<{ publicKey: string; signature: Buffer }> | null = null,
     retry = true
   ) {
+    console.log('REED _locallyConfirmTransaction')
     const feePayerKeypairOverride = (() => {
       if (feePayerOverride && this.feePayerKeypairs) {
         const stringFeePayer = feePayerOverride.toString()
@@ -193,13 +195,19 @@ export class TransactionHandler {
     recentBlockhash =
       recentBlockhash ??
       (await this.connection.getLatestBlockhash('confirmed')).blockhash
+    console.log('REED using recent blockhash:', recentBlockhash)
 
     // Construct the txn
 
     const tx = new Transaction({ recentBlockhash })
     instructions.forEach((i) => tx.add(i))
     tx.feePayer = feePayerAccount.publicKey
+    console.log(
+      'REED about to sign with feePayer:',
+      feePayerAccount.publicKey.toString()
+    )
     tx.sign(feePayerAccount)
+    console.log('REED successfully signed')
 
     if (Array.isArray(signatures)) {
       signatures.forEach(({ publicKey, signature }) => {
