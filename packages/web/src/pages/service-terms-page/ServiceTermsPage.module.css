@@ -1,7 +1,3 @@
-:global(#serviceTermsPage).container * {
-  font-family: Gilroy !important;
-}
-
 .container {
   display: inline-flex;
   flex-direction: column;
